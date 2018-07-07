@@ -19,8 +19,6 @@ export class UniverseComponent {
 
   initializeUniverse() {
 
-    console.log('initializing the universe');
-
     this.universe = [];
 
     for (let row = 0; row < this.universeSize; row++) {
@@ -31,19 +29,17 @@ export class UniverseComponent {
   }
 
   loadFrom(state) {
-
-    console.log('loading the universe from state' + state);
-
     this.universe = state;    
+  }
+
+  evolve()
+  {
+    
   }
 
 
   clone(){
-
-    console.log('cloning the universe');
-
     return this.universe.slice();
-
   }
 }
 

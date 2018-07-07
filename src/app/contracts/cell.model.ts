@@ -1,9 +1,9 @@
 
 export class Cell {
-    isAlive: boolean;
-    x: number;
-    y: number;
-    neighbours = [];
+    private isAlive: boolean;
+    private x: number;
+    private y: number;
+    private neighbours = [];
 
     constructor(x, y, isAlive=false) {
         this.x = x;
@@ -13,11 +13,6 @@ export class Cell {
 
     getIsAlive() {
         return this.isAlive;
-    }
-
-    //temp
-    setIsAlive(value) {
-        this.isAlive = true;
     }
 
     changeCellState() {

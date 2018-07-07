@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class GameService {
+
     constructor(private http: HttpClient) { }
 
     public getGosperGliderGunContent(){
@@ -11,13 +12,11 @@ export class GameService {
         console.log('calling service..');
 
         return this.http.get('http://localhost:4000/cells');
-        
     }
 
-    getHeaders() {
+    private getHeaders() {
         let headers: Headers = new Headers();
         headers.append('content-type', 'application/json');
         return headers;
     }
-
 }

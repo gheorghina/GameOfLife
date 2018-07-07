@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Cell } from '../contracts/cell.model';
 import { UniverseComponent } from '../universe/universe.component';
 import { GameService } from '../services/game.service';
+import { ICellResponse } from '../contracts/cellresponse.model';
 
 @Component({
   selector: 'app-game',
@@ -10,22 +11,19 @@ import { GameService } from '../services/game.service';
 })
 
 export class GameComponent {
-  @Input() universe: UniverseComponent;
+  @Input() universe: UniverseComponent;  
   gosperglidergun = [];
-  
   gameStarted = false;
 
   constructor(private gameService: GameService) {
   }
 
   ngOnInit () {    
-    this.gameService
-    .getGosperGliderGunContent()
-    .subscribe((data: Cell[]) => {
-
-      console.log(data.map( el => new Cell(el.x, el.y, el.isAlive)));
-      this.gosperglidergun = data.map( el => new Cell(el.x, el.y, el.isAlive));
-    });   
+    this.gameService.getGosperGliderGunContent()
+    .subscribe((data: ICellResponse[]) => {
+      this.gosperglidergun = this.mapToCells(data);
+      return this.mapToCells(this.gosperglidergun);
+    });        
   }
 
   initGame()
@@ -35,8 +33,17 @@ export class GameComponent {
   }
 
   loadGosperGliderGun(){
+    this.gameStarted = false;    
+    this.universe.loadFrom(this.mapToCells(this.gosperglidergun));
+  }
+
+  start(){
+    this.gameStarted = true;
+  }
+
+  stop(){
     this.gameStarted = false;
-    this.universe.loadFrom(this.gosperglidergun);
+
   }
 
   saveState(){
@@ -52,6 +59,10 @@ export class GameComponent {
     a.download = fileName;
 
     a.click();
+  }  
+
+  private mapToCells(data) {
+    return data.map(el => new Cell(el.x, el.y, el.isAlive));
   }
 
 }
