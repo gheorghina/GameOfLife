@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Cell } from './../contracts/cell.model';
+import { Cell } from '../contracts/cell.model';
 
 @Component({
   selector: 'app-universe',
@@ -9,22 +9,33 @@ import { Cell } from './../contracts/cell.model';
 
 export class UniverseComponent {
   universe = [];
-  universeSize = 30;
-  universeContainerSize = (15 * this.universeSize) + (2 * this.universeSize) + 'px';
+  universeSize = 40;
+  cellSize = 10;
+  universeContainerSize = (this.cellSize * this.universeSize) + (2 * this.universeSize) + 'px';  
 
   constructor() {
     this.initializeUniverse();
-    
   }
 
   initializeUniverse() {
+
+    console.log('initializing the universe');
+
+    this.universe = [];
+
     for (let row = 0; row < this.universeSize; row++) {
       for (let column = 0; column < this.universeSize; column++) {
         this.universe.push(new Cell(row, column));
       }
     }
+  }
 
-    this.universe = this.universe;
+  clone(){
+
+    console.log('cloning the universe');
+
+    return this.universe.slice();
+
   }
 }
 

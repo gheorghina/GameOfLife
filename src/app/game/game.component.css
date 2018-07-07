@@ -12,3 +12,7 @@
     margin-top: 5px;
     list-style:none;
 }
+
+#menu li:hover{   
+    color: lightblue;
+}
