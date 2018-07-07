@@ -1,0 +1,27 @@
+.universe-container{
+    margin: auto;
+    border-spacing: 0;
+    border: solid 2px darkgray; 
+    display: flex;
+    flex-flow: wrap;   
+}
+
+.cell
+{
+    margin: 0;
+    padding: 0;
+    background: lightgray;
+    border: solid 1px white;
+    width: 15px;
+    height: 15px;
+}
+
+.alive
+{
+    background: darkgray;
+}
+
+.cell:hover
+{
+    cursor: pointer;
+}
