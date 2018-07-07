@@ -25,10 +25,18 @@ export class UniverseComponent {
 
     for (let row = 0; row < this.universeSize; row++) {
       for (let column = 0; column < this.universeSize; column++) {
-        this.universe.push(new Cell(row, column));
+        this.universe.push(new Cell(row, column, false));
       }
     }
   }
+
+  loadFrom(state) {
+
+    console.log('loading the universe from state' + state);
+
+    this.universe = state;    
+  }
+
 
   clone(){
 

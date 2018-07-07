@@ -1,14 +1,14 @@
 
 export class Cell {
-    private isAlive: boolean;
-    private x: number;
-    private y: number;
-    private neighbours = [];
+    isAlive: boolean;
+    x: number;
+    y: number;
+    neighbours = [];
 
-    constructor(x, y) {
+    constructor(x, y, isAlive=false) {
         this.x = x;
         this.y = y;
-        this.isAlive = false;
+        this.isAlive = isAlive;
     }
 
     getIsAlive() {

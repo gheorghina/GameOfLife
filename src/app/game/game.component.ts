@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Cell } from '../contracts/cell.model';
 import { UniverseComponent } from '../universe/universe.component';
+import { GameService } from '../services/game.service';
 
 @Component({
   selector: 'app-game',
@@ -9,9 +11,22 @@ import { UniverseComponent } from '../universe/universe.component';
 
 export class GameComponent {
   @Input() universe: UniverseComponent;
+  gosperglidergun = [];
   
   gameStarted = false;
- 
+
+  constructor(private gameService: GameService) {
+  }
+
+  ngOnInit () {    
+    this.gameService
+    .getGosperGliderGunContent()
+    .subscribe((data: Cell[]) => {
+
+      console.log(data.map( el => new Cell(el.x, el.y, el.isAlive)));
+      this.gosperglidergun = data.map( el => new Cell(el.x, el.y, el.isAlive));
+    });   
+  }
 
   initGame()
   {
@@ -19,18 +34,23 @@ export class GameComponent {
     this.universe.initializeUniverse();
   }
 
+  loadGosperGliderGun(){
+    this.gameStarted = false;
+    this.universe.loadFrom(this.gosperglidergun);
+  }
+
   saveState(){
   
     const fileType = 'text/plain';
     const fileName = 'GameSnapshot.json';
 
-    var gameStateShapshot = JSON.stringify(this.universe.clone());
+    var gameStateSnapshot = JSON.stringify(this.universe.clone());
 
     var a = document.createElement("a");
-    var file = new Blob([gameStateShapshot], {type: fileType});
+    var file = new Blob([gameStateSnapshot], {type: fileType});
     a.href = URL.createObjectURL(file);
     a.download = fileName;
-    
+
     a.click();
   }
 

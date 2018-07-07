@@ -1,9 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { GameComponent } from './game/game.component';
 import { UniverseComponent } from './universe/universe.component';
+
+import { GameService } from  './services/game.service';
 
 @NgModule({
   declarations: [
@@ -12,9 +15,10 @@ import { UniverseComponent } from './universe/universe.component';
     UniverseComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [GameService, HttpClientModule],
   bootstrap: [AppComponent]
 })
 
