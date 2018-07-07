@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Cell } from '../contracts/cell.model';
+import { ICellResponse } from '../contracts/cellresponse.model';
 
 @Component({
   selector: 'app-universe',
@@ -8,10 +9,11 @@ import { Cell } from '../contracts/cell.model';
 })
 
 export class UniverseComponent {
-  universe = [];
+  generation = [];
+  gosperglidergun = [];
   universeSize = 40;
   cellSize = 10;
-  universeContainerSize = (this.cellSize * this.universeSize) + (2 * this.universeSize) + 'px';  
+  universeContainerSize = (this.cellSize * this.universeSize) + (2 * this.universeSize) + 'px';
 
   constructor() {
     this.initializeUniverse();
@@ -19,27 +21,58 @@ export class UniverseComponent {
 
   initializeUniverse() {
 
-    this.universe = [];
+    this.generation = [];
 
     for (let row = 0; row < this.universeSize; row++) {
+      this.generation[row] = [];
       for (let column = 0; column < this.universeSize; column++) {
-        this.universe.push(new Cell(row, column, false));
+        this.generation[row][column] = new Cell(row, column, false);
       }
     }
   }
 
-  loadFrom(state) {
-    this.universe = state;    
+  setGosperGliderGunState(fileData){
+    this.gosperglidergun = this.getNewGeneration(fileData);
   }
 
-  evolve()
-  {
-    
+  loadFromGosperGliderGunState() {
+
+    this.generation = this.getNewGeneration(this.gosperglidergun);
   }
 
+  evolve() {
+    console.log('evolving the universe');
 
-  clone(){
-    return this.universe.slice();
+    let oldGeneration = this.clone();    
+
+    this.generation = [];
+    for (let row = 0; row < this.universeSize; row++) {
+      this.generation[row] = [];
+      for (let column = 0; column < this.universeSize; column++) {
+        var cell = oldGeneration[row][column];
+        cell.evolveFrom(oldGeneration);
+        
+        this.generation.push(cell);
+      }
+    }
+  }
+
+  clone() {
+    return this.generation.slice();
+  }
+
+  getNewGeneration(fileData){
+    const dataSize = fileData.length;
+    let newGeneration = [];
+
+    for (let row = 0; row < dataSize; row++) {
+      newGeneration[row] = [];
+      for (let column = 0; column < dataSize; column++) {
+        newGeneration[row][column] =  new Cell(row, column, fileData[row][column].isAlive) ;
+      }
+    }
+
+    return newGeneration;
   }
 }
 

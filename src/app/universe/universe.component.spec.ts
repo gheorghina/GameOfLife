@@ -24,4 +24,9 @@ describe('UniverseComponent', () => {
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('h1').textContent).toContain('Welcome to game-of-file!');
   }));
+  it('should render initialize the universe', async(() => {
+    const fixture = TestBed.createComponent(UniverseComponent);
+    const app = fixture.debugElement.componentInstance;
+    expect(app.initialize().universe).toBeGreaterThan(0);
+  }));
 });

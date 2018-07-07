@@ -1,8 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Cell } from '../contracts/cell.model';
+import { ICellResponse } from '../contracts/cellresponse.model';
 import { UniverseComponent } from '../universe/universe.component';
 import { GameService } from '../services/game.service';
-import { ICellResponse } from '../contracts/cellresponse.model';
 
 @Component({
   selector: 'app-game',
@@ -11,18 +10,18 @@ import { ICellResponse } from '../contracts/cellresponse.model';
 })
 
 export class GameComponent {
-  @Input() universe: UniverseComponent;  
-  gosperglidergun = [];
+  @Input() universe: UniverseComponent;   
   gameStarted = false;
+  evolutionInterval = 1000;
+  playInterval;
 
   constructor(private gameService: GameService) {
   }
 
   ngOnInit () {    
     this.gameService.getGosperGliderGunContent()
-    .subscribe((data: ICellResponse[]) => {
-      this.gosperglidergun = this.mapToCells(data);
-      return this.mapToCells(this.gosperglidergun);
+    .subscribe((data: ICellResponse[][]) => {
+      this.universe.setGosperGliderGunState(data);
     });        
   }
 
@@ -34,16 +33,19 @@ export class GameComponent {
 
   loadGosperGliderGun(){
     this.gameStarted = false;    
-    this.universe.loadFrom(this.mapToCells(this.gosperglidergun));
+    this.universe.loadFromGosperGliderGunState();
   }
 
   start(){
     this.gameStarted = true;
+    const self = this;
+    this.universe.evolve();
+    //this.playInterval = setInterval(() => { self.universe.evolve();} , this.evolutionInterval);
   }
 
   stop(){
     this.gameStarted = false;
-
+    clearInterval(this.playInterval);
   }
 
   saveState(){
@@ -59,10 +61,5 @@ export class GameComponent {
     a.download = fileName;
 
     a.click();
-  }  
-
-  private mapToCells(data) {
-    return data.map(el => new Cell(el.x, el.y, el.isAlive));
-  }
-
+  } 
 }

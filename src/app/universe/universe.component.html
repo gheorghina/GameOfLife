@@ -1,8 +1,7 @@
-
-<div class="universe-container" [ngStyle]="{'width':universeContainerSize}">   
-  <div  *ngFor="let cell of universe" >
-       <div class="cell" [ngStyle]="{'background': cell.getIsAlive() ? 'blue' : 'lightgray'}" (click)="cell.changeCellState()"></div>
+<div class="universe-container" [ngStyle]="{'width':universeContainerSize}">
+  <div *ngFor="let row of generation">
+    <div *ngFor="let cell of row">
+      <div class="cell" [ngStyle]="{'background': cell.getIsAlive() ? 'blue' : 'lightgray'}" (click)="cell.changeCellState()"></div>
+    </div>
   </div>
 </div>
-
-
