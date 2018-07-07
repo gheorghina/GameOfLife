@@ -1,17 +1,19 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { UniverseComponent } from './universe.component';
+import { AppComponent } from './app.component';
+import { MenuComponent } from './menu/menu.component';
 
 @NgModule({
   declarations: [
-    UniverseComponent
+    AppComponent,
+    MenuComponent
   ],
   imports: [
     BrowserModule
   ],
   providers: [],
-  bootstrap: [UniverseComponent]
+  bootstrap: [AppComponent]
 })
 
-export class UniverseModule { }
+export class AppModule { }

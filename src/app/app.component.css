@@ -1,0 +1,16 @@
+.title
+{
+    text-align:center;  
+    color: gray;
+}
+
+.leftContainer
+{
+    float: left; 
+    width: 10%;
+}
+
+.mainContainer
+{
+    width: 75%;
+}
