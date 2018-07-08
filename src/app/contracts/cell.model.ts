@@ -13,7 +13,7 @@ export class Cell {
 
         this.neighbours = [new Position(this.x - 1, this.y - 1),
             new Position(this.x - 1, this.y), new Position(this.x - 1, this.y + 1), new Position(this.x, this.y - 1),
-            new Position(this.x, this.y + 1), new Position(this.x + 1, this.y - 1), new Position(this.x + 1, this.y + 1),
+            new Position(this.x, this.y + 1), new Position(this.x + 1, this.y - 1), new Position(this.x + 1, this.y),
             new Position(this.x + 1, this.y + 1)];
     }
 
@@ -47,10 +47,10 @@ export class Cell {
     private getAliveNeighboursCount(oldGeneration) {
 
         let count = 0;
-        
+
         for (var i = 0; i < this.neighbours.length; i++) {
             var item = this.neighbours[i];
-            if (item.x > 0 && item.y > 0 && item.x < oldGeneration.length && item.y < oldGeneration.length) {
+            if (item.x >= 0 && item.y >= 0 && item.x < oldGeneration.length && item.y < oldGeneration.length) {
 
                 if (oldGeneration[item.x][item.y].isAlive) {
                     count++;
