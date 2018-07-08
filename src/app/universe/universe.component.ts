@@ -20,15 +20,8 @@ export class UniverseComponent {
   }
 
   initializeUniverse() {
-
-    this.generation = [];
-
-    for (let row = 0; row < this.universeSize; row++) {
-      this.generation[row] = [];
-      for (let column = 0; column < this.universeSize; column++) {
-        this.generation[row][column] = new Cell(row, column, false);
-      }
-    }
+    this.generation = this.createNewGeneration(this.universeSize, 
+      (row, col)=> { return new Cell(row, col, false) });
   }
 
   setGosperGliderGunState(fileData) {
@@ -43,17 +36,13 @@ export class UniverseComponent {
   evolve() {   
 
     let oldGeneration = this.clone();
-    let newGeneration = [];
-
-    for (let row = 0; row < this.universeSize; row++) {
-      newGeneration[row] = [];
-      for (let column = 0; column < this.universeSize; column++) {
-        var cell = new Cell(row, column, oldGeneration[row][column].getIsAlive());
+    let newGeneration = this.createNewGeneration(this.universeSize, 
+      (row, col)=> { 
+        var cell = new Cell(row, col, oldGeneration[row][col].getIsAlive());
         cell.evolveFrom(oldGeneration);
-
-        newGeneration[row][column] = cell;
-      }
-    }
+        
+        return cell;
+      });
 
     this.generation = newGeneration;
   }
@@ -64,12 +53,20 @@ export class UniverseComponent {
 
   getNewGeneration(fileData) {
     const dataSize = fileData.length;
+    let newGeneration = this.createNewGeneration(dataSize, 
+      (row, col)=>{ return new Cell(row, col, fileData[row][col].isAlive) });
+
+    return newGeneration;
+  }
+
+  createNewGeneration(size, createCell)
+  {
     let newGeneration = [];
 
-    for (let row = 0; row < dataSize; row++) {
+    for (let row = 0; row < size; row++) {
       newGeneration[row] = [];
-      for (let column = 0; column < dataSize; column++) {
-        newGeneration[row][column] = new Cell(row, column, fileData[row][column].isAlive);
+      for (let column = 0; column < size; column++) {
+        newGeneration[row][column] = createCell(row, column); 
       }
     }
 
