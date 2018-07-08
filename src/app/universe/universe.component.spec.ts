@@ -1,32 +1,87 @@
 import { TestBed, async } from '@angular/core/testing';
 import { UniverseComponent } from './universe.component';
-// describe('UniverseComponent', () => {
-//   beforeEach(async(() => {
-//     TestBed.configureTestingModule({
-//       declarations: [
-//         UniverseComponent
-//       ],
-//     }).compileComponents();
-//   }));
-//   it('should create the app', async(() => {
-//     const fixture = TestBed.createComponent(UniverseComponent);
-//     const app = fixture.debugElement.componentInstance;
-//     expect(app).toBeTruthy();
-//   }));
-//   it(`should have as title 'app'`, async(() => {
-//     const fixture = TestBed.createComponent(UniverseComponent);
-//     const app = fixture.debugElement.componentInstance;
-//     expect(app.title).toEqual('app');
-//   }));
-//   it('should render title in a h1 tag', async(() => {
-//     const fixture = TestBed.createComponent(UniverseComponent);
-//     fixture.detectChanges();
-//     const compiled = fixture.debugElement.nativeElement;
-//     expect(compiled.querySelector('h1').textContent).toContain('Welcome to game-of-file!');
-//   }));
-//   it('should render initialize the universe', async(() => {
-//     const fixture = TestBed.createComponent(UniverseComponent);
-//     const app = fixture.debugElement.componentInstance;
-//     expect(app.initialize().universe).toBeGreaterThan(0);
-//   }));
-// });
+import { Cell } from './../contracts/cell.model';
+
+
+describe('Universe', () => {
+
+  it('should create the UniverseComponent', async(() => {
+      var universe = new UniverseComponent();
+      expect(universe).toBeTruthy();
+  }));
+
+  it('Universe with 1 single active cell should evolve to a univers with no active cell', async(() => {
+    var universe = new UniverseComponent();
+    universe.generation[0][0].changeCellState();
+    universe.evolve();
+
+    expect(universe.generation[0][0].getIsAlive()).toBeFalsy();
+  }));
+
+  it('Universe with disabled cell & 3 active neighbors should be reborned', async(() => {
+    var universe = new UniverseComponent();
+    
+    universe.generation[0][0].changeCellState();
+    universe.generation[0][2].changeCellState();
+    universe.generation[2][0].changeCellState();
+
+    universe.evolve();
+
+    expect(universe.generation[1][1].getIsAlive()).toBeTruthy();
+  }));
+
+  it('Universe with active cell & 4 active neighbors should evolve to a univers with the active cell disabled', async(() => {
+    var universe = new UniverseComponent();
+
+    universe.generation[1][1].changeCellState();
+    universe.generation[0][0].changeCellState();
+    universe.generation[0][2].changeCellState();
+    universe.generation[2][0].changeCellState();
+    universe.generation[2][2].changeCellState();
+
+    universe.evolve();
+
+    expect(universe.generation[1][1].getIsAlive()).toBeFalsy();
+  }));
+
+  it('Universe with active cell & 2 active neighbors should be kept alive', async(() => {
+    var universe = new UniverseComponent();
+
+    universe.generation[1][1].changeCellState();
+    universe.generation[0][0].changeCellState();
+    universe.generation[0][2].changeCellState();
+
+    universe.evolve();
+
+    expect(universe.generation[1][1].getIsAlive()).toBeTruthy();
+  }));
+
+  it('Universe with active cell & 3 active neighbors should be kept alive', async(() => {
+    var universe = new UniverseComponent();
+
+    universe.generation[1][1].changeCellState();
+    universe.generation[0][0].changeCellState();
+    universe.generation[0][2].changeCellState();
+    universe.generation[2][0].changeCellState();
+
+    universe.evolve();
+
+    expect(universe.generation[1][1].getIsAlive()).toBeTruthy();
+  }));  
+
+});
+
+export class OldGeneration {
+  universe: UniverseComponent;
+
+  constructor() {
+    this.universe = new UniverseComponent();
+  }
+
+  getUniverseWithSingleCellActive() {
+      this.universe.generation[0][0].changeCellState();
+
+      return this.universe;
+  }  
+}
+

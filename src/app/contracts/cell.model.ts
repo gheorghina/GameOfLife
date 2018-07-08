@@ -50,13 +50,13 @@ export class Cell {
 
     private getAliveNeighboursCount(oldGeneration) {
 
-        let count = 0;
-
+        let count = 0;        
+        
         for (var i = 0; i < this.neighbours.length; i++) {
             var item = this.neighbours[i];
             if (item.x >= 0 && item.y >= 0 && item.x < oldGeneration.length && item.y < oldGeneration.length) {
-
-                if (oldGeneration[item.x][item.y].isAlive) {
+              
+                if (oldGeneration[item.x][item.y].getIsAlive()) {
                     count++;
                 }
             }

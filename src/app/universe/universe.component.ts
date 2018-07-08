@@ -42,13 +42,19 @@ export class UniverseComponent {
 
   evolve() {
 
+    //console.log('evolve the universe ---');
+    
+
     let oldGeneration = this.clone();
     let newGeneration = [];
+
+    // console.log('old generation ---');
+    // console.log(oldGeneration);
 
     for (let row = 0; row < this.universeSize; row++) {
       newGeneration[row] = [];
       for (let column = 0; column < this.universeSize; column++) {
-        var cell = oldGeneration[row][column];
+        var cell = new Cell(row, column, oldGeneration[row][column].getIsAlive());
         cell.evolveFrom(oldGeneration);
 
         newGeneration[row][column] = cell;
@@ -56,6 +62,9 @@ export class UniverseComponent {
     }
 
     this.generation = newGeneration;
+
+    // console.log('new generation ---');
+    // console.log(newGeneration);
   }
 
   clone() {

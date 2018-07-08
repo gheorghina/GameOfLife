@@ -6,7 +6,6 @@ describe('Cell', () => {
     it('should create the cell', async(() => {
         var cell = new Cell(0, 0, true);
         expect(cell).toBeTruthy();
-        expect(cell).toBeTruthy();
     }));
 
     it('should change the cell state', async(() => {
@@ -124,10 +123,9 @@ export class OldGeneration {
 
         oldGeneration[1][1].changeCellState();
         oldGeneration[0][0].changeCellState();
-        oldGeneration[0][1].changeCellState();
         oldGeneration[0][2].changeCellState();
-        oldGeneration[1][0].changeCellState();
-        oldGeneration[1][1].changeCellState();
+        oldGeneration[2][0].changeCellState();
+        oldGeneration[2][2].changeCellState();
 
         return oldGeneration;
     }
