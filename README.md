@@ -4,7 +4,6 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Preview
 =======
-![Xixia](/src/assets/Game Of Life.png)
 ![alt text](https://github.com/gheorghina/GameOfLife/blob/master/src/assets/Game%20Of%20Life.PNG)
 
 ## Development server
