@@ -31,6 +31,12 @@ export class Cell {
     }
 
     private evolveState(oldAliveNeighboursCount) {
+
+        if (this.isAlive && (oldAliveNeighboursCount == 2 || oldAliveNeighboursCount == 3)) {
+            this.isAlive = true;
+            return;
+        }
+
         if (!this.isAlive && oldAliveNeighboursCount == 3) {
             this.isAlive = true;            
             return;
@@ -40,8 +46,6 @@ export class Cell {
             this.isAlive = false;
             return;
         }
-
-        //else keep the state
     }
 
     private getAliveNeighboursCount(oldGeneration) {
