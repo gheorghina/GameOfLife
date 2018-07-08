@@ -11,7 +11,6 @@ import { GameService } from '../services/game.service';
 
 export class GameComponent {
   @Input() universe: UniverseComponent;   
-  gameStarted = false;
   evolutionInterval = 1000;
   playInterval;
 
@@ -27,17 +26,15 @@ export class GameComponent {
 
   initGame()
   {
-    this.gameStarted = false;
     this.universe.initializeUniverse();
   }
 
   loadGosperGliderGun(){
-    this.gameStarted = false;    
+    stop();    
     this.universe.loadFromGosperGliderGunState();
   }
 
   start(){
-    this.gameStarted = true;
     const self = this;
     this.universe.evolve();
     //this.playInterval = setInterval(() => { self.universe.evolve();} , this.evolutionInterval).bind(this);
@@ -45,7 +42,6 @@ export class GameComponent {
   }
 
   stop(){
-    this.gameStarted = false;
     clearInterval(this.playInterval);
   }
 
