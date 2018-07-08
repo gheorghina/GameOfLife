@@ -10,8 +10,7 @@ import { GameService } from '../services/game.service';
 })
 
 export class GameComponent {
-  @Input() universe: UniverseComponent;   
-  evolutionInterval = 1000;
+  @Input() universe: UniverseComponent;  
   playInterval;
 
   constructor(private gameService: GameService) {
@@ -36,9 +35,7 @@ export class GameComponent {
 
   start(){
     const self = this;
-    this.universe.evolve();
-    //this.playInterval = setInterval(() => { self.universe.evolve();} , this.evolutionInterval).bind(this);
-    //this.playInterval = setInterval( self.universe.evolve.bind(self),  this.evolutionInterval);
+    this.playInterval = setInterval(function() { self.universe.evolve()},  500);
   }
 
   stop(){

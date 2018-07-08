@@ -40,16 +40,10 @@ export class UniverseComponent {
     this.generation = this.getNewGeneration(this.gosperglidergun);
   }
 
-  evolve() {
-
-    //console.log('evolve the universe ---');
-    
+  evolve() {   
 
     let oldGeneration = this.clone();
     let newGeneration = [];
-
-    // console.log('old generation ---');
-    // console.log(oldGeneration);
 
     for (let row = 0; row < this.universeSize; row++) {
       newGeneration[row] = [];
@@ -62,9 +56,6 @@ export class UniverseComponent {
     }
 
     this.generation = newGeneration;
-
-    // console.log('new generation ---');
-    // console.log(newGeneration);
   }
 
   clone() {
