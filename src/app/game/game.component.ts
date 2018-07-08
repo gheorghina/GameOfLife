@@ -40,7 +40,8 @@ export class GameComponent {
     this.gameStarted = true;
     const self = this;
     this.universe.evolve();
-    //this.playInterval = setInterval(() => { self.universe.evolve();} , this.evolutionInterval);
+    //this.playInterval = setInterval(() => { self.universe.evolve();} , this.evolutionInterval).bind(this);
+    //this.playInterval = setInterval( self.universe.evolve.bind(self),  this.evolutionInterval);
   }
 
   stop(){

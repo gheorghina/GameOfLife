@@ -4,15 +4,17 @@ export class Cell {
     private isAlive: boolean;
     private x: number;
     private y: number;
-    private neighbours = [new Position(this.x - 1, this.y - 1),
-    new Position(this.x - 1, this.y), new Position(this.x - 1, this.y + 1), new Position(this.x, this.y - 1),
-    new Position(this.x, this.y + 1), new Position(this.x + 1, this.y - 1), new Position(this.x + 1, this.y + 1),
-    new Position(this.x + 1, this.y + 1)];
+    private neighbours;
 
     constructor(x, y, isAlive = false) {
         this.x = x;
         this.y = y;
         this.isAlive = isAlive;
+
+        this.neighbours = [new Position(this.x - 1, this.y - 1),
+            new Position(this.x - 1, this.y), new Position(this.x - 1, this.y + 1), new Position(this.x, this.y - 1),
+            new Position(this.x, this.y + 1), new Position(this.x + 1, this.y - 1), new Position(this.x + 1, this.y + 1),
+            new Position(this.x + 1, this.y + 1)];
     }
 
     getIsAlive() {
@@ -30,7 +32,7 @@ export class Cell {
 
     private evolveState(oldAliveNeighboursCount) {
         if (!this.isAlive && oldAliveNeighboursCount == 3) {
-            this.isAlive = true;
+            this.isAlive = true;            
             return;
         }
 
@@ -49,14 +51,14 @@ export class Cell {
         let count = 0;
         for (var i = 0; i < this.neighbours.length; i++) {
             var item = this.neighbours[i];
-            if (!isNaN(item.x) && !isNaN(item.y) && item.x !== undefined && item.y !== undefined) {
+            if (item.x > 0 && item.y > 0 && item.x < oldGeneration.length && item.y < oldGeneration.length) {
+
                 if (oldGeneration[item.x][item.y].isAlive) {
                     count++;
                 }
             }
         }
 
-        console.log(count);
         return count;
     }
 

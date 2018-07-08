@@ -31,7 +31,7 @@ export class UniverseComponent {
     }
   }
 
-  setGosperGliderGunState(fileData){
+  setGosperGliderGunState(fileData) {
     this.gosperglidergun = this.getNewGeneration(fileData);
   }
 
@@ -41,34 +41,35 @@ export class UniverseComponent {
   }
 
   evolve() {
-    console.log('evolving the universe');
 
-    let oldGeneration = this.clone();    
+    let oldGeneration = this.clone();
+    let newGeneration = [];
 
-    this.generation = [];
     for (let row = 0; row < this.universeSize; row++) {
-      this.generation[row] = [];
+      newGeneration[row] = [];
       for (let column = 0; column < this.universeSize; column++) {
         var cell = oldGeneration[row][column];
         cell.evolveFrom(oldGeneration);
-        
-        this.generation.push(cell);
+
+        newGeneration[row][column] = cell;
       }
     }
+
+    this.generation = newGeneration;
   }
 
   clone() {
     return this.generation.slice();
   }
 
-  getNewGeneration(fileData){
+  getNewGeneration(fileData) {
     const dataSize = fileData.length;
     let newGeneration = [];
 
     for (let row = 0; row < dataSize; row++) {
       newGeneration[row] = [];
       for (let column = 0; column < dataSize; column++) {
-        newGeneration[row][column] =  new Cell(row, column, fileData[row][column].isAlive) ;
+        newGeneration[row][column] = new Cell(row, column, fileData[row][column].isAlive);
       }
     }
 
