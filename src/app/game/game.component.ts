@@ -12,7 +12,7 @@ import { GameService } from '../services/game.service';
 export class GameComponent {
   @Input() universe: UniverseComponent;  
   playInterval;
-  initialSize = 40;
+  initialSize: number;
 
   constructor(private gameService: GameService) {  
   }
@@ -55,7 +55,7 @@ export class GameComponent {
     const fileType = 'text/plain';
     const fileName = 'GameSnapshot.json';
 
-    var gameStateSnapshot = JSON.stringify(this.universe.clone());
+    var gameStateSnapshot = JSON.stringify(this.universe.slimDown());
 
     var a = document.createElement("a");
     var file = new Blob([gameStateSnapshot], {type: fileType});
