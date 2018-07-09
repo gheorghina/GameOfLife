@@ -1,27 +1,32 @@
-    <ul id="menu">
-      <li>
-        <div>
-          <a target="_blank" (click)="initGame()"> Clear All </a>
-        </div>
-      </li>
-      <li>
-          <div>
-            <a target="_blank" (click)="loadGosperGliderGun()"> Load Gosper Glider Gun </a>
-          </div>
-        </li>
-      <li>
-        <div>
-          <a target="_blank" (click)="start()"> Start </a>
-        </div>
-      </li>
-      <li>
-        <div>
-          <a target="_blank" (click)="stop()"> Stop </a>
-        </div>
-      </li>
-      <li>
-        <div>
-          <a target="_blank" (click)="saveState()"> Save </a>
-        </div>
-      </li>
-    </ul>
+<div>
+  <p>The Size: </p>
+  <input (keyup)="onSetSize(sizeBox.value)" #sizeBox style ='margin-left: 40px; width: 100px' value="{{initialSize}}">  
+</div>
+<ul id="menu">
+  <li>
+    <div>
+      <a target="_blank" (click)="initGame()"> Init </a>
+    </div>
+  </li>
+
+  <li>
+    <div>
+      <a target="_blank" (click)="loadGosperGliderGun()"> Load Gosper Glider Gun </a>
+    </div>
+  </li>
+  <li>
+    <div>
+      <a target="_blank" (click)="start()"> Start </a>
+    </div>
+  </li>
+  <li>
+    <div>
+      <a target="_blank" (click)="stop()"> Stop </a>
+    </div>
+  </li>
+  <li>
+    <div>
+      <a target="_blank" (click)="saveState()"> Save </a>
+    </div>
+  </li>
+</ul>

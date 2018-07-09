@@ -16,10 +16,14 @@ export class UniverseComponent {
   universeContainerSize = (this.cellSize * this.universeSize) + (2 * this.universeSize) + 'px';
 
   constructor() {
-    this.initializeUniverse();
+    this.initializeUniverse(this.universeSize);
   }
 
-  initializeUniverse() {
+  initializeUniverse(givenSize) {
+
+    this.universeSize = givenSize;
+    this.universeContainerSize = (this.cellSize * this.universeSize) + (2 * this.universeSize) + 'px';
+
     this.generation = this.createNewGeneration(this.universeSize, 
       (row, col)=> { return new Cell(row, col, false) });
   }
@@ -59,7 +63,7 @@ export class UniverseComponent {
     return newGeneration;
   }
 
-  createNewGeneration(size, createCell)
+  private createNewGeneration(size, createCell)
   {
     let newGeneration = [];
 

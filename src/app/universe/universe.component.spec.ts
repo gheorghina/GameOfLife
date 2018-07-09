@@ -71,17 +71,3 @@ describe('Universe', () => {
 
 });
 
-export class OldGeneration {
-  universe: UniverseComponent;
-
-  constructor() {
-    this.universe = new UniverseComponent();
-  }
-
-  getUniverseWithSingleCellActive() {
-      this.universe.generation[0][0].changeCellState();
-
-      return this.universe;
-  }  
-}
-

@@ -12,11 +12,14 @@ import { GameService } from '../services/game.service';
 export class GameComponent {
   @Input() universe: UniverseComponent;  
   playInterval;
+  initialSize = 40;
 
-  constructor(private gameService: GameService) {
+  constructor(private gameService: GameService) {  
   }
 
-  ngOnInit () {    
+  ngOnInit () { 
+    console.log("init universe");    
+    
     this.gameService.getGosperGliderGunContent()
     .subscribe((data: ICellResponse[][]) => {
       this.universe.setGosperGliderGunState(data);
@@ -25,7 +28,12 @@ export class GameComponent {
 
   initGame()
   {
-    this.universe.initializeUniverse();
+    this.universe.initializeUniverse(this.initialSize);
+  }
+
+  onSetSize(size: number){
+    console.log('on setting the size');
+    this.initialSize = size;
   }
 
   loadGosperGliderGun(){
