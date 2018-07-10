@@ -1,7 +1,7 @@
-<div class="universe-container" [ngStyle]="{'width':universeContainerSize}">
-  <div *ngFor="let row of generation">
-    <div *ngFor="let cell of row">
-      <div class="cell" [ngStyle]="{'background': cell.getIsAlive() ? 'blue' : 'lightgray'}" (click)="cell.changeCellState()"></div>
+<div class="universe-container" [ngStyle]="{'width':slimGenerationSize}">
+  <div *ngFor="let row of generationNumbers">
+    <div *ngFor="let cell of row"> 
+      <div class="cell" [ngStyle]="{'background': hasActiveCell(cell.x,cell.y) ? 'blue' : 'lightgray'}" (click)="setCell(cell.x, cell.y)"></div>
     </div>
   </div>
 </div>
