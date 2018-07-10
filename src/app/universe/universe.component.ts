@@ -14,16 +14,14 @@ export class UniverseComponent {
   slimGeneration = [];
   generationNumbers = [];
   slimGenerationSize = this.generateContainerSize(this.universeSize);
+  theMarginIsHitInEvolution= false;
 
   constructor() {
     this.initializeUniverse(this.universeSize);
   }
 
   initializeUniverse(givenSize) {
-    this.universeSize = givenSize;
-    this.slimGenerationSize = this.generateContainerSize(givenSize);
-    this.slimGeneration = [];
-    this.updateGenerationNumbers(givenSize);
+    this.init(givenSize);
   }
 
   setGosperGliderGunState(fileData) {
@@ -63,18 +61,24 @@ export class UniverseComponent {
         let cell = new Cell(row, column, idx >= 0);
         cell.evolveFrom(oldGeneration);
         if (cell.getIsAlive()) {
+          this.theMarginIsHitInEvolution = (row == this.universeSize - 1) || (column == this.universeSize - 1);
           newGeneration.push(cell);
         }
+      }     
+
+      //grow dynamically if the margin is hit in evolution
+      if(this.theMarginIsHitInEvolution)
+      {
+        let increasedSize = ++this.universeSize;
+        this.init(increasedSize);
+
+        this.theMarginIsHitInEvolution = false;
       }
 
       this.slimGeneration = [];
       this.slimGeneration = newGeneration;
     }
-  }
-
-  private haveActiveCellOnMargin(oldGeneration) {
-    //TBD for dynamic growth
-  }
+  }  
 
   clone() {
     return this.slimGeneration.slice();
@@ -146,6 +150,13 @@ export class UniverseComponent {
         this.generationNumbers[i][j] = {x:i, y:j};
       }
     }
-  }   
+  }  
+  
+  private init(givenSize){
+    this.universeSize = givenSize;
+    this.slimGenerationSize = this.generateContainerSize(givenSize);
+    this.slimGeneration = [];
+    this.updateGenerationNumbers(givenSize);
+  }
 }
 

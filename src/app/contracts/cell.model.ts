@@ -2,8 +2,8 @@ import { Position } from '../contracts/position.model';
 
 export class Cell {
     private isAlive: boolean;
-    private x: number;
-    private y: number;
+    x: number;
+    y: number;
     private neighbours;
 
     constructor(x, y, isAlive = false) {
@@ -53,8 +53,6 @@ export class Cell {
                 }   
             }          
         }       
-
-        //console.log('getAliveNeighboursCount' + count);
 
         return count;
     }

@@ -17,8 +17,7 @@ export class GameComponent {
   constructor(private gameService: GameService) {  
   }
 
-  ngOnInit () { 
-    console.log("init universe");    
+  ngOnInit () {   
     
     this.gameService.getGosperGliderGunContent()
     .subscribe((data: ICellResponse[][]) => {
@@ -27,12 +26,11 @@ export class GameComponent {
   }
 
   initGame()
-  {
+  {    
     this.universe.initializeUniverse(this.initialSize);
   }
 
   onSetSize(size: number){
-    console.log('on setting the size');
     this.initialSize = size;
   }
 
