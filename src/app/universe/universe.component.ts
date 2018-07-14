@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Cell } from '../contracts/cell.model';
+import { SlimUniverse } from '../contracts/slimuniverse.model';
 
 @Component({
   selector: 'app-universe',
@@ -8,13 +9,13 @@ import { Cell } from '../contracts/cell.model';
 })
 
 export class UniverseComponent {
-  gosperglidergun = [];
+  gosperglidergun = []; 
   universeSize = 40;
+  universeNumbers = []; 
+  slimUniverses = [];
   cellSize = 10;
-  slimGeneration = [];
-  generationNumbers = [];
-  slimGenerationSize = this.generateContainerSize(this.universeSize);
-  theMarginIsHitInEvolution= false;
+  generation = [];  
+  generationSize = this.generateContainerSize(this.universeSize);    
 
   constructor() {
     this.initializeUniverse(this.universeSize);
@@ -28,28 +29,29 @@ export class UniverseComponent {
     this.gosperglidergun = fileData;
   }
 
-  loadFromGosperGliderGunState() {    
-    this.setFromSlimGeneration(this.gosperglidergun);
+  loadFromGosperGliderGunState() {
+    this.setFromGeneration(this.gosperglidergun);
   }
 
   setCell(row, col) {
-    let indexOfPair = this.indexOfPair(this.slimGeneration, row, col);
+    let indexOfPair = this.indexOfPair(this.generation, row, col);
 
     if (indexOfPair >= 0) {
-      this.slimGeneration.splice(indexOfPair, 1);
+      this.generation.splice(indexOfPair, 1);
       return;
     }
 
-    this.slimGeneration.push(new Cell(row, col, true));
+    this.generation.push(new Cell(row, col, true)); 
   }
 
   hasActiveCell(row, col) {
-    let cellIndex = this.indexOfPair(this.slimGeneration, row, col);
+    let cellIndex = this.indexOfPair(this.generation, row, col);
     return cellIndex >= 0;
   }
 
   evolve() {
 
+    let universeMarginIsHit = false;
     let oldGeneration = this.clone();
     let newGenerationSize = this.universeSize;
     let newGeneration = [];
@@ -59,39 +61,36 @@ export class UniverseComponent {
 
         let idx = this.indexOfPair(oldGeneration, row, column);
         let cell = new Cell(row, column, idx >= 0);
+
         cell.evolveFrom(oldGeneration);
+        
         if (cell.getIsAlive()) {
-          this.theMarginIsHitInEvolution = (row == this.universeSize - 1) || (column == this.universeSize - 1);
+          universeMarginIsHit = (row == this.universeSize - 1) || (column == this.universeSize - 1);
           newGeneration.push(cell);
         }
-      }     
-
-      //grow dynamically if the margin is hit in evolution
-      if(this.theMarginIsHitInEvolution)
-      {
-        let increasedSize = ++this.universeSize;
-        this.init(increasedSize);
-
-        this.theMarginIsHitInEvolution = false;
       }
 
-      this.slimGeneration = [];
-      this.slimGeneration = newGeneration;
+      if (universeMarginIsHit) {
+        let increasedSize = ++this.universeSize;
+        this.init(increasedSize);
+      }   
+
+      this.generation = newGeneration;     
     }
-  }  
+  }
 
   clone() {
-    return this.slimGeneration.slice();
+    return this.generation.slice();
   }
 
   slimDown() {
     let newGeneration = [];
     let index = 0;
 
-    for (let i = 0; i < this.slimGeneration.length; i++) {
+    for (let i = 0; i < this.generation.length; i++) {
       newGeneration[index] = {
-        x: this.slimGeneration[i].x,
-        y: this.slimGeneration[i].y
+        x: this.generation[i].x,
+        y: this.generation[i].y
       };
       index++;
     }
@@ -108,11 +107,11 @@ export class UniverseComponent {
     return -1;
   }
 
-  private setFromSlimGeneration(slimData) {
+  private setFromGeneration(slimData) {
 
     const dataSize = Math.max(this.getMaxOfSlimData(slimData), this.universeSize);
     this.universeSize = dataSize;
-    this.slimGenerationSize = this.generateContainerSize(dataSize);
+    this.generationSize = this.generateContainerSize(dataSize);
 
     let newGeneration = [];
     for (let i = 0; i < slimData.length; i++) {
@@ -121,8 +120,8 @@ export class UniverseComponent {
 
     this.updateGenerationNumbers(dataSize);
 
-    this.slimGeneration = [];
-    this.slimGeneration = newGeneration;
+    this.generation = [];
+    this.generation = newGeneration;
   }
 
   private getMaxOfSlimData(slimData) {
@@ -142,20 +141,20 @@ export class UniverseComponent {
   }
 
   private updateGenerationNumbers(givenSize) {
-    this.generationNumbers = [];
+    this.universeNumbers = [];
 
     for (var i = 0; i < givenSize; i++) {
-      this.generationNumbers[i] = [];
+      this.universeNumbers[i] = [];
       for (var j = 0; j < givenSize; j++) {
-        this.generationNumbers[i][j] = {x:i, y:j};
+        this.universeNumbers[i][j] = { x: i, y: j };
       }
     }
-  }  
-  
-  private init(givenSize){
+  }
+
+  private init(givenSize) {
     this.universeSize = givenSize;
-    this.slimGenerationSize = this.generateContainerSize(givenSize);
-    this.slimGeneration = [];
+    this.generationSize = this.generateContainerSize(givenSize);
+    this.generation = [];
     this.updateGenerationNumbers(givenSize);
   }
 }

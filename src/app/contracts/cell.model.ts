@@ -1,4 +1,4 @@
-import { Position } from '../contracts/position.model';
+import { Position } from './position.model';
 
 export class Cell {
     private isAlive: boolean;
