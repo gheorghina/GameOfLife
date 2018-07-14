@@ -69,14 +69,14 @@ export class UniverseComponent {
     for (var i = 0; i < addiacentCellGroups.length; i++) {
 
       let slimGroup = addiacentCellGroups[i];
-   
+      
       for (let row = slimGroup.getMinX(); row <= slimGroup.getMaxX(); row++) {
         for (let col = slimGroup.getMinY(); col <= slimGroup.getMaxY(); col++) {
 
-           let cell = new Cell(row, col, this.seenCellInGeneration[this.getKey(row, col)]);
+         let cell = new Cell(row, col, this.seenCellInGeneration[this.getKey(row, col)]);
 
           cell.evolveFrom(oldGeneration);
-       
+
           if (cell.getIsAlive() && !seenCellsInNewGeneration[this.getKey(row, col)]) {
             universeMarginIsHit = (row == this.universeSize - 1) || (col == this.universeSize - 1);
             newGeneration.push(cell);
