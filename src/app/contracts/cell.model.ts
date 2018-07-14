@@ -4,7 +4,7 @@ export class Cell {
     private isAlive: boolean;
     x: number;
     y: number;
-    private neighbours;
+    neighbours;
 
     constructor(x, y, isAlive = false) {
         this.x = x;

@@ -1,6 +1,6 @@
-<div class="universe-container" [ngStyle]="{'width':generationSize}">
-  <div *ngFor="let row of universeNumbers">
-    <div *ngFor="let cell of row"> 
+<div class="universe-container" [ngStyle]="{'width':generationSize, 'height': generationSize}">
+  <div *ngFor="let row of universeNumbers" class="tr">
+    <div *ngFor="let cell of row" class="td"> 
       <div class="cell" [ngStyle]="{'background': hasActiveCell(cell.x,cell.y) ? 'blue' : 'lightgray'}" (click)="setCell(cell.x, cell.y)"></div>
     </div>
   </div>

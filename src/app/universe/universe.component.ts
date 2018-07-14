@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Cell } from '../contracts/cell.model';
-import { SlimUniverse } from '../contracts/slimuniverse.model';
+import { AddiacentCellsGroup } from '../contracts/addiacentcellsgroup.model';
 
 @Component({
   selector: 'app-universe',
@@ -9,13 +9,13 @@ import { SlimUniverse } from '../contracts/slimuniverse.model';
 })
 
 export class UniverseComponent {
-  gosperglidergun = []; 
+  gosperglidergun = [];
   universeSize = 40;
-  universeNumbers = []; 
-  slimUniverses = [];
+  universeNumbers = [];
   cellSize = 10;
-  generation = [];  
-  generationSize = this.generateContainerSize(this.universeSize);    
+  private generation = [];
+  seenCellInGeneration = [];
+  generationSize = this.generateContainerSize(this.universeSize);
 
   constructor() {
     this.initializeUniverse(this.universeSize);
@@ -34,49 +34,66 @@ export class UniverseComponent {
   }
 
   setCell(row, col) {
-    let indexOfPair = this.indexOfPair(this.generation, row, col);
-
-    if (indexOfPair >= 0) {
-      this.generation.splice(indexOfPair, 1);
+    if (this.seenCellInGeneration[this.getKey(row, col)]) {
+      this.removePairFromGeneration(this.generation, row, col);
+      this.seenCellInGeneration[this.getKey(row, col)] = false;
       return;
     }
 
-    this.generation.push(new Cell(row, col, true)); 
+    let newCell = new Cell(row, col, true);
+    this.generation.push(newCell);
+    this.seenCellInGeneration[this.getKey(row, col)] = true;
   }
 
   hasActiveCell(row, col) {
-    let cellIndex = this.indexOfPair(this.generation, row, col);
-    return cellIndex >= 0;
+    if (this.seenCellInGeneration[this.getKey(row, col)]) {
+      return true;
+    }
+    return false;
   }
 
   evolve() {
 
+    if (this.generation.length == 0) {
+      return;
+    }
+
     let universeMarginIsHit = false;
     let oldGeneration = this.clone();
-    let newGenerationSize = this.universeSize;
     let newGeneration = [];
+    let addiacentCellGroups = this.getAddiacentGroups(oldGeneration);
+    let seenCellsInNewGeneration = [];
 
-    for (let row = 0; row < newGenerationSize; row++) {
-      for (let column = 0; column < newGenerationSize; column++) {
+    console.log(addiacentCellGroups);
 
-        let idx = this.indexOfPair(oldGeneration, row, column);
-        let cell = new Cell(row, column, idx >= 0);
+    for (var i = 0; i < addiacentCellGroups.length; i++) {
 
-        cell.evolveFrom(oldGeneration);
-        
-        if (cell.getIsAlive()) {
-          universeMarginIsHit = (row == this.universeSize - 1) || (column == this.universeSize - 1);
-          newGeneration.push(cell);
+      let slimGroup = addiacentCellGroups[i];
+   
+      for (let row = slimGroup.getMinX(); row <= slimGroup.getMaxX(); row++) {
+        for (let col = slimGroup.getMinY(); col <= slimGroup.getMaxY(); col++) {
+
+           let cell = new Cell(row, col, this.seenCellInGeneration[this.getKey(row, col)]);
+
+          cell.evolveFrom(oldGeneration);
+       
+          if (cell.getIsAlive() && !seenCellsInNewGeneration[this.getKey(row, col)]) {
+            universeMarginIsHit = (row == this.universeSize - 1) || (col == this.universeSize - 1);
+            newGeneration.push(cell);
+            seenCellsInNewGeneration[this.getKey(cell.x, cell.y)] = true;
+          }
         }
       }
 
-      if (universeMarginIsHit) {
-        let increasedSize = ++this.universeSize;
-        this.init(increasedSize);
-      }   
-
-      this.generation = newGeneration;     
     }
+
+    if (universeMarginIsHit) {
+      let increasedSize = ++this.universeSize;
+      this.init(increasedSize);
+    }
+
+    this.generation = newGeneration;
+    this.seenCellInGeneration = seenCellsInNewGeneration;
   }
 
   clone() {
@@ -98,24 +115,71 @@ export class UniverseComponent {
     return newGeneration;
   }
 
-  indexOfPair(generation, x, y) {
-    for (let i = 0; i < generation.length; i++) {
-      if (generation[i].x == x && generation[i].y == y) {
-        return i;
-      }
+  getAddiacentGroups(generation = this.generation, groupsCount = 0, addiacentCellsGroups = []) {
+
+    let generationClone = generation.slice();
+    let cell = generationClone.pop();
+
+    addiacentCellsGroups[groupsCount] = new AddiacentCellsGroup(this.universeSize);
+    addiacentCellsGroups[groupsCount].addCell(cell);
+
+    this.computeAddiacentCells(generationClone, cell, addiacentCellsGroups[groupsCount]);
+
+    if (generationClone.length > 0) {
+      this.getAddiacentGroups(generationClone, ++groupsCount, addiacentCellsGroups);
     }
-    return -1;
+
+    return addiacentCellsGroups;
   }
 
-  private setFromGeneration(slimData) {
+  private getKey(x, y) {    
+    return '' + x  + '-' + y;
+  }
 
-    const dataSize = Math.max(this.getMaxOfSlimData(slimData), this.universeSize);
+  private computeAddiacentCells(generation, cell, group) {
+
+    let addiacentCells = [];
+
+    for (var i = 0; i < generation.length; i++) {
+      for (var n = 0; n < cell.neighbours.length; n++) {
+        if (generation[i] && (cell.neighbours[n].x == generation[i].x && cell.neighbours[n].y == generation[i].y)) {
+          let extractedCell = generation.splice(i, 1)[0];
+
+          if (extractedCell) {
+            group.addCell(extractedCell);
+            addiacentCells.push(extractedCell);
+          }
+        }
+      }
+    }
+
+    if (generation.length > 0) {
+      for (var i = 0; i < addiacentCells.length; i++) {
+        this.computeAddiacentCells(generation, addiacentCells[i], group);
+      }
+    }
+  }
+
+  private removePairFromGeneration(generation, x, y) {
+    for (let i = 0; i < generation.length; i++) {
+      if (generation[i].x == x && generation[i].y == y) {
+        this.generation.splice(i, 1);
+      }
+    }
+  }
+
+  private setFromGeneration(data) {
+
+    const dataSize = Math.max(this.getMaxOfData(data), this.universeSize);
     this.universeSize = dataSize;
     this.generationSize = this.generateContainerSize(dataSize);
+    this.seenCellInGeneration = [];
 
     let newGeneration = [];
-    for (let i = 0; i < slimData.length; i++) {
-      newGeneration.push(new Cell(slimData[i].x, slimData[i].y, true));
+    for (let i = 0; i < data.length; i++) {
+      let cell = new Cell(data[i].x, data[i].y, true);
+      newGeneration.push(cell);
+      this.seenCellInGeneration[this.getKey(cell.x, cell.y)] = true;
     }
 
     this.updateGenerationNumbers(dataSize);
@@ -124,13 +188,13 @@ export class UniverseComponent {
     this.generation = newGeneration;
   }
 
-  private getMaxOfSlimData(slimData) {
+  private getMaxOfData(data) {
     let x = 0;
     let y = 0;
 
-    for (let i = 0; i < slimData.length; i++) {
-      x = Math.max(slimData[i].x, x);
-      y = Math.max(slimData[i].y, y);
+    for (let i = 0; i < data.length; i++) {
+      x = Math.max(data[i].x, x);
+      y = Math.max(data[i].y, y);
     }
 
     return Math.max(x, y) + 1;
@@ -155,6 +219,7 @@ export class UniverseComponent {
     this.universeSize = givenSize;
     this.generationSize = this.generateContainerSize(givenSize);
     this.generation = [];
+    this.seenCellInGeneration = [];
     this.updateGenerationNumbers(givenSize);
   }
 }

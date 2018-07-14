@@ -2,9 +2,17 @@
     margin: auto;
     border-spacing: 0;
     border: solid 2px darkgray; 
-    display: flex;
-    flex-flow: wrap;   
+    display: table;  
 }
+
+.tr{
+    display: table-row;
+}
+
+.td{
+    display: table-cell;
+}
+
 
 .cell
 {
@@ -12,7 +20,7 @@
     padding: 0;
     border: solid 1px white;
     width: 10px;
-    height: 10px;
+    height: 10px;   
 }
 
 .alive
