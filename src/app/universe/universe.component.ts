@@ -64,8 +64,6 @@ export class UniverseComponent {
     let addiacentCellGroups = this.getAddiacentGroups(oldGeneration);
     let seenCellsInNewGeneration = [];
 
-    console.log(addiacentCellGroups);
-
     for (var i = 0; i < addiacentCellGroups.length; i++) {
 
       let slimGroup = addiacentCellGroups[i];
@@ -77,8 +75,12 @@ export class UniverseComponent {
 
           cell.evolveFrom(oldGeneration);
 
-          if (cell.getIsAlive() && !seenCellsInNewGeneration[this.getKey(row, col)]) {
-            universeMarginIsHit = (row == this.universeSize - 1) || (col == this.universeSize - 1);
+          if (cell.getIsAlive() && !seenCellsInNewGeneration[this.getKey(row, col)]) {            
+
+            if((row == this.universeSize - 1) || (col == this.universeSize - 1)){
+              universeMarginIsHit = true;
+            }
+            
             newGeneration.push(cell);
             seenCellsInNewGeneration[this.getKey(cell.x, cell.y)] = true;
           }
@@ -219,7 +221,6 @@ export class UniverseComponent {
     this.universeSize = givenSize;
     this.generationSize = this.generateContainerSize(givenSize);
     this.generation = [];
-    this.seenCellInGeneration = [];
     this.updateGenerationNumbers(givenSize);
   }
 }
