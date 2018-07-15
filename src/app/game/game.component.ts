@@ -41,7 +41,7 @@ export class GameComponent {
 
   start(){
     const self = this;
-    this.playInterval = setInterval(function() { self.universe.evolve()},  500);
+    this.playInterval = setInterval(function() { self.universe.evolve()},  300);
   }
 
   stop(){
