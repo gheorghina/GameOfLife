@@ -228,8 +228,6 @@ export class UniverseComponent {
 
   private updateGenerationNumbers() {
 
-    console.log(this.drawXPosition + '' + this.drawYPosition + ''+ this.drawSquareSize);
-
     this.universeNumbers = [];
 
     for (var i = this.drawXPosition; i < (this.drawXPosition + this.drawSquareSize); i++) {
@@ -239,7 +237,6 @@ export class UniverseComponent {
       }
     }
 
-    console.log(this.universeNumbers);
   }
 
   private init(givenSize) {
