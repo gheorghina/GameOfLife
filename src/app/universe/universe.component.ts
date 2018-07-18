@@ -12,8 +12,9 @@ import { start } from 'repl';
 export class UniverseComponent {
   gosperglidergun = [];
   universeSize = 40;
-  drawStartValue = 0;
-  drawEndValue = 40;
+  drawXPosition = 0;
+  drawYPosition = 0;
+  drawSquareSize =40;
   universeNumbers = [];
   cellSize = 10;
   private generation = [];
@@ -187,7 +188,7 @@ export class UniverseComponent {
       this.seenCellInGeneration[this.getKey(cell.x, cell.y)] = true;
     }
 
-    this.updateGenerationNumbers(0, dataSize);
+    this.updateGenerationNumbers();
 
     this.generation = [];
     this.generation = newGeneration;
@@ -209,33 +210,43 @@ export class UniverseComponent {
     return (this.cellSize * size) + (2 * size) + 'px';
   }
 
-  onSetDrawStartValue(startValue){
-    this.drawStartValue = startValue;
-    this.updateGenerationNumbers(this.drawStartValue, this.drawEndValue);
+  onSetXPosition(xValue){
+    this.drawXPosition = parseInt(xValue);
+    this.updateGenerationNumbers();
 
   }
 
-  onSetDrawEndValue(endValue){
-    this.drawEndValue = endValue;
-    this.updateGenerationNumbers(this.drawStartValue, this.drawEndValue);
+  onSetYPosition(yValue){
+    this.drawYPosition = parseInt(yValue);
+    this.updateGenerationNumbers();
   }
 
-  private updateGenerationNumbers(start, givenSize) {
+  onSetSquareSize(squareValue){
+    this.drawSquareSize = parseInt(squareValue);
+    this.updateGenerationNumbers();
+  }
+
+  private updateGenerationNumbers() {
+
+    console.log(this.drawXPosition + '' + this.drawYPosition + ''+ this.drawSquareSize);
+
     this.universeNumbers = [];
 
-    for (var i = 0; i < givenSize; i++) {
+    for (var i = this.drawXPosition; i < (this.drawXPosition + this.drawSquareSize); i++) {
       this.universeNumbers[i] = [];
-      for (var j = 0; j < givenSize; j++) {
+      for (var j =this.drawYPosition; j < (this.drawYPosition + this.drawSquareSize); j++) {
         this.universeNumbers[i][j] = { x: i, y: j };
       }
     }
+
+    console.log(this.universeNumbers);
   }
 
   private init(givenSize) {
     this.universeSize = givenSize;
     this.generationSize = this.generateContainerSize(givenSize);
     this.generation = [];
-    this.updateGenerationNumbers(0, givenSize);
+    this.updateGenerationNumbers();
   }
 }
 
