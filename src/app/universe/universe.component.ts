@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Cell } from '../contracts/cell.model';
 import { AddiacentCellsGroup } from '../contracts/addiacentcellsgroup.model';
+import { start } from 'repl';
 
 @Component({
   selector: 'app-universe',
@@ -11,6 +12,8 @@ import { AddiacentCellsGroup } from '../contracts/addiacentcellsgroup.model';
 export class UniverseComponent {
   gosperglidergun = [];
   universeSize = 40;
+  drawStartValue = 0;
+  drawEndValue = 40;
   universeNumbers = [];
   cellSize = 10;
   private generation = [];
@@ -91,7 +94,7 @@ export class UniverseComponent {
 
     if (universeMarginIsHit) {
       let increasedSize = ++this.universeSize;
-      this.init(increasedSize);
+      //this.init(increasedSize); Temporray skip this for testing purposes of the algorithm
     }
 
     this.generation = newGeneration;
@@ -184,7 +187,7 @@ export class UniverseComponent {
       this.seenCellInGeneration[this.getKey(cell.x, cell.y)] = true;
     }
 
-    this.updateGenerationNumbers(dataSize);
+    this.updateGenerationNumbers(0, dataSize);
 
     this.generation = [];
     this.generation = newGeneration;
@@ -206,7 +209,18 @@ export class UniverseComponent {
     return (this.cellSize * size) + (2 * size) + 'px';
   }
 
-  private updateGenerationNumbers(givenSize) {
+  onSetDrawStartValue(startValue){
+    this.drawStartValue = startValue;
+    this.updateGenerationNumbers(this.drawStartValue, this.drawEndValue);
+
+  }
+
+  onSetDrawEndValue(endValue){
+    this.drawEndValue = endValue;
+    this.updateGenerationNumbers(this.drawStartValue, this.drawEndValue);
+  }
+
+  private updateGenerationNumbers(start, givenSize) {
     this.universeNumbers = [];
 
     for (var i = 0; i < givenSize; i++) {
@@ -221,7 +235,7 @@ export class UniverseComponent {
     this.universeSize = givenSize;
     this.generationSize = this.generateContainerSize(givenSize);
     this.generation = [];
-    this.updateGenerationNumbers(givenSize);
+    this.updateGenerationNumbers(0, givenSize);
   }
 }
 

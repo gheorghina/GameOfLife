@@ -1,6 +1,15 @@
-<div class="universe-container" [ngStyle]="{'width':generationSize, 'height': generationSize}">
+<div class="inputSizeText">
+  <p >Draw Start Value: </p>
+  <input class="inputSizeValue" (keyup)="onSetDrawStartValue(startBox.value)" #startBox value="{{drawStartValue}}">
+</div>
+<div class="inputSizeText">
+  <p >Draw End Value: </p>
+  <input class="inputSizeValue" (keyup)="onSetDrawEndValue(endBox.value)" #endBox value="{{drawEndValue}}">
+</div>
+
+<div class="universe-container">
   <div *ngFor="let row of universeNumbers" class="tr">
-    <div *ngFor="let cell of row" class="td"> 
+    <div *ngFor="let cell of row" class="td">
       <div class="cell" [ngStyle]="{'background': hasActiveCell(cell.x,cell.y) ? 'blue' : 'lightgray'}" (click)="setCell(cell.x, cell.y)"></div>
     </div>
   </div>

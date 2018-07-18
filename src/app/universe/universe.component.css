@@ -3,14 +3,30 @@
     border-spacing: 0;
     border: solid 2px darkgray; 
     display: table;  
+    width: 100px;
+    height: 100px;
+    overflow-y: auto;
+}
+
+.inputSizeText{
+    float: left;
+    margin-left: 100px;
+    margin-bottom: 20px;
+}
+
+.inputSizeValue{
+    margin-left: 40px; 
+    width: 100px
 }
 
 .tr{
     display: table-row;
+    overflow: inherit;
 }
 
 .td{
     display: table-cell;
+    overflow: inherit;
 }
 
 
