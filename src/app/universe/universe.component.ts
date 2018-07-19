@@ -13,7 +13,7 @@ export class UniverseComponent {
   universeSize = 40;
   drawXPosition = 0;
   drawYPosition = 0;
-  drawSquareSize =40;
+  drawSquareSize = 40;
   universeNumbers = [];
   cellSize = 10;
   private generation = [];
@@ -70,20 +70,20 @@ export class UniverseComponent {
     for (var i = 0; i < addiacentCellGroups.length; i++) {
 
       let slimGroup = addiacentCellGroups[i];
-      
+
       for (let row = slimGroup.getMinX(); row <= slimGroup.getMaxX(); row++) {
         for (let col = slimGroup.getMinY(); col <= slimGroup.getMaxY(); col++) {
 
-         let cell = new Cell(row, col, this.seenCellInGeneration[this.getKey(row, col)]);
+          let cell = new Cell(row, col, this.seenCellInGeneration[this.getKey(row, col)]);
 
           cell.evolveFrom(oldGeneration);
 
-          if (cell.getIsAlive() && !seenCellsInNewGeneration[this.getKey(row, col)]) {            
+          if (cell.getIsAlive() && !seenCellsInNewGeneration[this.getKey(row, col)]) {
 
-            if((row == this.universeSize - 1) || (col == this.universeSize - 1)){
+            if ((row == this.universeSize - 1) || (col == this.universeSize - 1)) {
               universeMarginIsHit = true;
             }
-            
+
             newGeneration.push(cell);
             seenCellsInNewGeneration[this.getKey(cell.x, cell.y)] = true;
           }
@@ -137,8 +137,8 @@ export class UniverseComponent {
     return addiacentCellsGroups;
   }
 
-  private getKey(x, y) {    
-    return '' + x  + '-' + y;
+  private getKey(x, y) {
+    return '' + x + '-' + y;
   }
 
   private computeAddiacentCells(generation, cell, group) {
@@ -209,17 +209,29 @@ export class UniverseComponent {
     return (this.cellSize * size) + (2 * size) + 'px';
   }
 
-  onSetXPosition(xValue){
+  onSetXPosition(xValue) {
+    if (xValue == "") {
+      return;
+    }
+
     this.drawXPosition = parseInt(xValue);
     this.updateGenerationNumbers();
   }
 
-  onSetYPosition(yValue){
+  onSetYPosition(yValue) {
+    if (yValue == "") {
+      return;
+    }
+
     this.drawYPosition = parseInt(yValue);
     this.updateGenerationNumbers();
   }
 
-  onSetSquareSize(squareValue){
+  onSetSquareSize(squareValue) {
+    if (squareValue == "") {
+      return;
+    }
+
     this.drawSquareSize = parseInt(squareValue);
     this.updateGenerationNumbers();
   }
@@ -230,7 +242,7 @@ export class UniverseComponent {
 
     for (var i = this.drawXPosition; i < (this.drawXPosition + this.drawSquareSize); i++) {
       this.universeNumbers[i] = [];
-      for (var j =this.drawYPosition; j < (this.drawYPosition + this.drawSquareSize); j++) {
+      for (var j = this.drawYPosition; j < (this.drawYPosition + this.drawSquareSize); j++) {
         this.universeNumbers[i][j] = { x: i, y: j };
       }
     }
