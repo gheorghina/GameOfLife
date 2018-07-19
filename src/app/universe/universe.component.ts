@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Cell } from '../contracts/cell.model';
 import { AddiacentCellsGroup } from '../contracts/addiacentcellsgroup.model';
-import { start } from 'repl';
 
 @Component({
   selector: 'app-universe',
@@ -213,7 +212,6 @@ export class UniverseComponent {
   onSetXPosition(xValue){
     this.drawXPosition = parseInt(xValue);
     this.updateGenerationNumbers();
-
   }
 
   onSetYPosition(yValue){
@@ -236,6 +234,8 @@ export class UniverseComponent {
         this.universeNumbers[i][j] = { x: i, y: j };
       }
     }
+
+    this.generationSize = this.generateContainerSize(this.drawSquareSize);
 
   }
 

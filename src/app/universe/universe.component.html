@@ -1,20 +1,23 @@
-<div class="inputSizeText">
-  <p > X Position: </p>
-  <input class="inputSizeValue" (keyup)="onSetXPosition(xBox.value)" #xBox value="{{drawXPosition}}">
-</div>
-<div class="inputSizeText">
-  <p > Y Position: </p>
-  <input class="inputSizeValue" (keyup)="onSetYPosition(yBox.value)" #yBox value="{{drawYPosition}}">
-</div>
-<div class="inputSizeText">
-    <p > Visible Square Size: </p>
+<div class="universeModuleContainer">
+  <div class="inputSizeText">
+    <p> X Position: </p>
+    <input class="inputSizeValue" (keyup)="onSetXPosition(xBox.value)" #xBox value="{{drawXPosition}}">
+  </div>
+  <div class="inputSizeText">
+    <p> Y Position: </p>
+    <input class="inputSizeValue" (keyup)="onSetYPosition(yBox.value)" #yBox value="{{drawYPosition}}">
+  </div>
+  <div class="inputSizeText">
+    <p> Visible Square Size: </p>
     <input class="inputSizeValue" (keyup)="onSetSquareSize(squareBox.value)" #squareBox value="{{drawSquareSize}}">
   </div>
 
-<div class="universe-container">
-  <div *ngFor="let row of universeNumbers" class="tr">
-    <div *ngFor="let cell of row" class="td">
-      <div *ngIf="cell !== undefined" class="cell" [ngStyle]="{'background': hasActiveCell(cell.x,cell.y) ? 'blue' : 'lightgray'}" (click)="setCell(cell.x, cell.y)"></div>
+  <div class="universe-container" [ngStyle]="{'width':generationSize}">
+    <div *ngFor="let row of universeNumbers" class="tr">
+      <div *ngFor="let cell of row" class="td">
+        <div *ngIf="cell !== undefined" class="cell" [ngStyle]="{'background': hasActiveCell(cell.x,cell.y) ? 'blue' : 'lightgray'}"
+          (click)="setCell(cell.x, cell.y)"></div>
+      </div>
     </div>
   </div>
 </div>
