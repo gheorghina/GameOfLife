@@ -137,7 +137,6 @@ export class UniverseComponent {
     return addiacentCellsGroups;
   }
 
-<<<<<<< HEAD
   setXPosition(xValue) {
     if (xValue == "") {
       return;
@@ -166,8 +165,6 @@ export class UniverseComponent {
   }
 
 
-=======
->>>>>>> c385415dae58e3c12485c1a1c5b9d807fe5fe9e1
   private getKey(x, y) {
     return '' + x + '-' + y;
   }
@@ -235,7 +232,6 @@ export class UniverseComponent {
 
     return Math.max(x, y) + 1;
   }
-<<<<<<< HEAD
 
   private generateContainerSize(size) {
     return (this.cellSize * size) + (2 * size) + 'px';
@@ -243,42 +239,6 @@ export class UniverseComponent {
 
   private updateGenerationNumbers() {
 
-=======
-
-  private generateContainerSize(size) {
-    return (this.cellSize * size) + (2 * size) + 'px';
-  }
-
-  onSetXPosition(xValue) {
-    if (xValue == "") {
-      return;
-    }
-
-    this.drawXPosition = parseInt(xValue);
-    this.updateGenerationNumbers();
-  }
-
-  onSetYPosition(yValue) {
-    if (yValue == "") {
-      return;
-    }
-
-    this.drawYPosition = parseInt(yValue);
-    this.updateGenerationNumbers();
-  }
-
-  onSetSquareSize(squareValue) {
-    if (squareValue == "") {
-      return;
-    }
-
-    this.drawSquareSize = parseInt(squareValue);
-    this.updateGenerationNumbers();
-  }
-
-  private updateGenerationNumbers() {
-
->>>>>>> c385415dae58e3c12485c1a1c5b9d807fe5fe9e1
     this.universeNumbers = [];
 
     for (var i = this.drawXPosition; i < (this.drawXPosition + this.drawSquareSize); i++) {
