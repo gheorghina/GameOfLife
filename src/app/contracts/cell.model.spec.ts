@@ -17,17 +17,19 @@ describe('Cell', () => {
     }));
 
     it('if dead with 3 alive neighbours should be reborned', async(() => {
-        var universe = new OldGeneration().getOldGenerationForRproduction();
-        let cell = universe[0][0];
+        let oldGeneration = new OldGeneration();
+        var universe = oldGeneration.getOldGenerationForReproduction();
+        let cell = oldGeneration.cellOfPair(universe, 0, 0);
 
-        cell.evolveFrom(universe); 
+        cell.evolveFrom(universe);
 
         expect(cell.getIsAlive()).toBeTruthy();
     }));
 
-    it('with 2 alive neighbours should be kept alive', async(() => {        
-        var universe = new OldGeneration().getOldGenerationWith2AliveNeighbours();
-        let cell = universe[0][0];
+    it('with 2 alive neighbours should be kept alive', async(() => {
+        let oldGeneration = new OldGeneration();
+        var universe = oldGeneration.getOldGenerationWith2AliveNeighbours();
+        let cell = oldGeneration.cellOfPair(universe, 1, 1);
 
         cell.evolveFrom(universe);
 
@@ -35,29 +37,32 @@ describe('Cell', () => {
     }));
 
     it('with 3 alive neighbours should be kept alive', async(() => {
-        var universe = new OldGeneration().getOldGenerationWith3AliveNeighbours();
-        let cell = universe[0][0];
+        let oldGeneration = new OldGeneration();
+        var universe = oldGeneration.getOldGenerationWith3AliveNeighbours();
+        let cell = oldGeneration.cellOfPair(universe, 0, 0);
 
         cell.evolveFrom(universe);
 
         expect(cell.getIsAlive()).toBeTruthy();
     }));
 
-    
-    it('with less than 2 alive neighbours should die', async(() => {
-        var universe = new OldGeneration().getOldGenerationWithLessThan2AliveNeighbours();
-        let cell = universe[0][0];
 
-        cell.evolveFrom(universe); 
+    it('with less than 2 alive neighbours should die', async(() => {
+        let oldGeneration = new OldGeneration();
+        var universe = oldGeneration.getOldGenerationWithLessThan2AliveNeighbours();
+        let cell = oldGeneration.cellOfPair(universe, 0, 0);
+
+        cell.evolveFrom(universe);
 
         expect(cell.getIsAlive()).toBeFalsy();
     }));
 
     it('with more than 3 alive neighbours should die', async(() => {
-        var universe = new OldGeneration().getOldGenerationWithMoreThan3AliveNeighbours();
-        let cell = universe[1][1];
+        let oldGeneration = new OldGeneration();
+        var universe = oldGeneration.getOldGenerationWithMoreThan3AliveNeighbours();
+        let cell = oldGeneration.cellOfPair(universe, 1, 1);
 
-        cell.evolveFrom(universe); 
+        cell.evolveFrom(universe);
 
         expect(cell.getIsAlive()).toBeFalsy();
     }));
@@ -65,68 +70,71 @@ describe('Cell', () => {
 });
 
 export class OldGeneration {
-    generation = [];
     size = 3;
 
     constructor() {
-        for (let row = 0; row < this.size; row++) {
-            this.generation[row] = [];
-            for (let column = 0; column < this.size; column++) {
-                this.generation[row][column] = new Cell(0, 0, false);
-            }
-        }
     }
 
-    getOldGenerationForRproduction() {
-        let oldGeneration = this.generation.slice();
+    cellOfPair(generation, x, y) {
+        for (let i = 0; i < generation.length; i++) {
+            if (generation[i].x == x && generation[i].y == y) {
+                return generation[i];
+            }
+        }
+        return new Cell(x, y);
+    }
 
-        oldGeneration[0][0].changeCellState();
-        oldGeneration[0][1].changeCellState();
-        oldGeneration[1][0].changeCellState();
-        oldGeneration[1][1].changeCellState();
+    getOldGenerationForReproduction() {
 
-        return oldGeneration;
+        let generation = [];
+
+        generation.push(new Cell(1, 1, true));
+        generation.push(new Cell(0, 0, true));
+        generation.push(new Cell(0, 1, true));
+        generation.push(new Cell(1, 0, true));        
+
+        return generation;
     }
 
     getOldGenerationWith2AliveNeighbours() {
-        let oldGeneration = this.generation.slice();
+        let generation = [];
 
-        oldGeneration[0][0].changeCellState();
-        oldGeneration[1][0].changeCellState();
-        oldGeneration[1][1].changeCellState();
+        generation.push(new Cell(0, 0, true));
+        generation.push(new Cell(1, 1, true));
+        generation.push(new Cell(2, 0, true));
 
-        return oldGeneration;
+        return generation;
     }
 
     getOldGenerationWith3AliveNeighbours() {
-        let oldGeneration = this.generation.slice();
+        let generation = [];
 
-        oldGeneration[0][0].changeCellState();
-        oldGeneration[0][1].changeCellState();
-        oldGeneration[1][0].changeCellState();
-        oldGeneration[1][1].changeCellState();
+        generation.push(new Cell(0, 0, true));
+        generation.push(new Cell(0, 1, true));
+        generation.push(new Cell(1, 0, true));
+        generation.push(new Cell(1, 1, true));
 
-        return oldGeneration;
+        return generation;
     }
 
     getOldGenerationWithLessThan2AliveNeighbours() {
-        let oldGeneration = this.generation.slice();
+        let generation = [];
 
-        oldGeneration[0][0].changeCellState();
-        oldGeneration[0][1].changeCellState();
+        generation.push(new Cell(0, 0, true));
+        generation.push(new Cell(0, 1, true));
 
-        return oldGeneration;
+        return generation;
     }
 
     getOldGenerationWithMoreThan3AliveNeighbours() {
-        let oldGeneration = this.generation.slice();
+        let generation = [];
 
-        oldGeneration[1][1].changeCellState();
-        oldGeneration[0][0].changeCellState();
-        oldGeneration[0][2].changeCellState();
-        oldGeneration[2][0].changeCellState();
-        oldGeneration[2][2].changeCellState();
+        generation.push(new Cell(1, 1, true));
+        generation.push(new Cell(0, 0, true));
+        generation.push(new Cell(0, 2, true));
+        generation.push(new Cell(2, 0, true));
+        generation.push(new Cell(2, 2, true));
 
-        return oldGeneration;
+        return generation;
     }
 }

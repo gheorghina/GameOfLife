@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Cell } from '../contracts/cell.model';
-import { ICellResponse } from '../contracts/cellresponse.model';
+import { AddiacentCellsGroup } from '../contracts/addiacentcellsgroup.model';
 
 @Component({
   selector: 'app-universe',
@@ -9,68 +9,254 @@ import { ICellResponse } from '../contracts/cellresponse.model';
 })
 
 export class UniverseComponent {
-  generation = [];
   gosperglidergun = [];
   universeSize = 40;
+  drawXPosition = 0;
+  drawYPosition = 0;
+  drawSquareSize = 40;
+  universeNumbers = [];
   cellSize = 10;
-  universeContainerSize = (this.cellSize * this.universeSize) + (2 * this.universeSize) + 'px';
+  private generation = [];
+  seenCellInGeneration = [];
+  generationSize = this.generateContainerSize(this.universeSize);
 
   constructor() {
-    this.initializeUniverse();
+    this.initializeUniverse(this.universeSize);
   }
 
-  initializeUniverse() {
-    this.generation = this.createNewGeneration(this.universeSize, 
-      (row, col)=> { return new Cell(row, col, false) });
+  initializeUniverse(givenSize) {
+    this.init(givenSize);
   }
 
   setGosperGliderGunState(fileData) {
-    this.gosperglidergun = this.getNewGeneration(fileData);
+    this.gosperglidergun = fileData;
   }
 
   loadFromGosperGliderGunState() {
-
-    this.generation = this.getNewGeneration(this.gosperglidergun);
+    this.setFromGeneration(this.gosperglidergun);
   }
 
-  evolve() {   
+  setCell(row, col) {
+    if (this.seenCellInGeneration[this.getKey(row, col)]) {
+      this.removePairFromGeneration(this.generation, row, col);
+      this.seenCellInGeneration[this.getKey(row, col)] = false;
+      return;
+    }
 
+    let newCell = new Cell(row, col, true);
+    this.generation.push(newCell);
+    this.seenCellInGeneration[this.getKey(row, col)] = true;
+  }
+
+  hasActiveCell(row, col) {
+    if (this.seenCellInGeneration[this.getKey(row, col)]) {
+      return true;
+    }
+    return false;
+  }
+
+  evolve() {
+
+    if (this.generation.length == 0) {
+      return;
+    }
+
+    let universeMarginIsHit = false;
     let oldGeneration = this.clone();
-    let newGeneration = this.createNewGeneration(this.universeSize, 
-      (row, col)=> { 
-        var cell = new Cell(row, col, oldGeneration[row][col].getIsAlive());
-        cell.evolveFrom(oldGeneration);
-        
-        return cell;
-      });
+    let newGeneration = [];
+    let addiacentCellGroups = this.getAddiacentGroups(oldGeneration);
+    let seenCellsInNewGeneration = [];
+
+    for (var i = 0; i < addiacentCellGroups.length; i++) {
+
+      let slimGroup = addiacentCellGroups[i];
+
+      for (let row = slimGroup.getMinX(); row <= slimGroup.getMaxX(); row++) {
+        for (let col = slimGroup.getMinY(); col <= slimGroup.getMaxY(); col++) {
+
+          let cell = new Cell(row, col, this.seenCellInGeneration[this.getKey(row, col)]);
+
+          cell.evolveFrom(oldGeneration);
+
+          if (cell.getIsAlive() && !seenCellsInNewGeneration[this.getKey(row, col)]) {
+
+            if ((row == this.universeSize - 1) || (col == this.universeSize - 1)) {
+              universeMarginIsHit = true;
+            }
+
+            newGeneration.push(cell);
+            seenCellsInNewGeneration[this.getKey(cell.x, cell.y)] = true;
+          }
+        }
+      }
+
+    }
+
+    if (universeMarginIsHit) {
+      let increasedSize = ++this.universeSize;
+      //this.init(increasedSize); Temporray skip this for testing purposes of the algorithm
+    }
 
     this.generation = newGeneration;
+    this.seenCellInGeneration = seenCellsInNewGeneration;
   }
 
   clone() {
     return this.generation.slice();
   }
 
-  getNewGeneration(fileData) {
-    const dataSize = fileData.length;
-    let newGeneration = this.createNewGeneration(dataSize, 
-      (row, col)=>{ return new Cell(row, col, fileData[row][col].isAlive) });
+  slimDown() {
+    let newGeneration = [];
+    let index = 0;
+
+    for (let i = 0; i < this.generation.length; i++) {
+      newGeneration[index] = {
+        x: this.generation[i].x,
+        y: this.generation[i].y
+      };
+      index++;
+    }
 
     return newGeneration;
   }
 
-  createNewGeneration(size, createCell)
-  {
-    let newGeneration = [];
+  getAddiacentGroups(generation = this.generation, groupsCount = 0, addiacentCellsGroups = []) {
 
-    for (let row = 0; row < size; row++) {
-      newGeneration[row] = [];
-      for (let column = 0; column < size; column++) {
-        newGeneration[row][column] = createCell(row, column); 
+    let generationClone = generation.slice();
+    let cell = generationClone.pop();
+
+    addiacentCellsGroups[groupsCount] = new AddiacentCellsGroup(this.universeSize);
+    addiacentCellsGroups[groupsCount].addCell(cell);
+
+    this.computeAddiacentCells(generationClone, cell, addiacentCellsGroups[groupsCount]);
+
+    if (generationClone.length > 0) {
+      this.getAddiacentGroups(generationClone, ++groupsCount, addiacentCellsGroups);
+    }
+
+    return addiacentCellsGroups;
+  }
+
+  setXPosition(xValue) {
+    if (xValue == "") {
+      return;
+    }
+
+    this.drawXPosition = parseInt(xValue);
+    this.updateGenerationNumbers();
+  }
+
+  setYPosition(yValue) {
+    if (yValue == "") {
+      return;
+    }
+
+    this.drawYPosition = parseInt(yValue);
+    this.updateGenerationNumbers();
+  }
+
+  setSquareSize(squareValue) {
+    if (squareValue == "") {
+      return;
+    }
+
+    this.drawSquareSize = parseInt(squareValue);
+    this.updateGenerationNumbers();
+  }
+
+
+  private getKey(x, y) {
+    return '' + x + '-' + y;
+  }
+
+  private computeAddiacentCells(generation, cell, group) {
+
+    let addiacentCells = [];
+
+    for (var i = 0; i < generation.length; i++) {
+      for (var n = 0; n < cell.neighbours.length; n++) {
+        if (generation[i] && (cell.neighbours[n].x == generation[i].x && cell.neighbours[n].y == generation[i].y)) {
+          let extractedCell = generation.splice(i, 1)[0];
+
+          if (extractedCell) {
+            group.addCell(extractedCell);
+            addiacentCells.push(extractedCell);
+          }
+        }
       }
     }
 
-    return newGeneration;
+    if (generation.length > 0) {
+      for (var i = 0; i < addiacentCells.length; i++) {
+        this.computeAddiacentCells(generation, addiacentCells[i], group);
+      }
+    }
+  }
+
+  private removePairFromGeneration(generation, x, y) {
+    for (let i = 0; i < generation.length; i++) {
+      if (generation[i].x == x && generation[i].y == y) {
+        this.generation.splice(i, 1);
+      }
+    }
+  }
+
+  private setFromGeneration(data) {
+
+    const dataSize = Math.max(this.getMaxOfData(data), this.universeSize);
+    this.universeSize = dataSize;
+    this.generationSize = this.generateContainerSize(dataSize);
+    this.seenCellInGeneration = [];
+
+    let newGeneration = [];
+    for (let i = 0; i < data.length; i++) {
+      let cell = new Cell(data[i].x, data[i].y, true);
+      newGeneration.push(cell);
+      this.seenCellInGeneration[this.getKey(cell.x, cell.y)] = true;
+    }
+
+    this.updateGenerationNumbers();
+
+    this.generation = [];
+    this.generation = newGeneration;
+  }
+
+  private getMaxOfData(data) {
+    let x = 0;
+    let y = 0;
+
+    for (let i = 0; i < data.length; i++) {
+      x = Math.max(data[i].x, x);
+      y = Math.max(data[i].y, y);
+    }
+
+    return Math.max(x, y) + 1;
+  }
+
+  private generateContainerSize(size) {
+    return (this.cellSize * size) + (2 * size) + 'px';
+  }  
+
+  private updateGenerationNumbers() {
+
+    this.universeNumbers = [];
+
+    for (var i = this.drawXPosition; i < (this.drawXPosition + this.drawSquareSize); i++) {
+      this.universeNumbers[i] = [];
+      for (var j = this.drawYPosition; j < (this.drawYPosition + this.drawSquareSize); j++) {
+        this.universeNumbers[i][j] = { x: i, y: j };
+      }
+    }
+
+    this.generationSize = this.generateContainerSize(this.drawSquareSize);
+
+  }
+
+  private init(givenSize) {
+    this.universeSize = givenSize;
+    this.generationSize = this.generateContainerSize(givenSize);
+    this.generation = [];
+    this.updateGenerationNumbers();
   }
 }
 

@@ -1,27 +1,43 @@
-    <ul id="menu">
-      <li>
-        <div>
-          <a target="_blank" (click)="initGame()"> Clear All </a>
-        </div>
-      </li>
-      <li>
-          <div>
-            <a target="_blank" (click)="loadGosperGliderGun()"> Load Gosper Glider Gun </a>
-          </div>
-        </li>
-      <li>
-        <div>
-          <a target="_blank" (click)="start()"> Start </a>
-        </div>
-      </li>
-      <li>
-        <div>
-          <a target="_blank" (click)="stop()"> Stop </a>
-        </div>
-      </li>
-      <li>
-        <div>
-          <a target="_blank" (click)="saveState()"> Save </a>
-        </div>
-      </li>
-    </ul>
+<div>
+  <p>The Size: </p>
+  <input (keyup)="onSetSize(sizeBox.value)" #sizeBox class="inputSizeValue" value="{{initialSize}}">  
+</div>
+<div class="inputSizeText">
+    <p> X Position: </p>
+    <input class="inputSizeValue" (keyup)="onSetXPosition(xBox.value)" #xBox value="{{drawXPosition}}">
+  </div>
+  <div class="inputSizeText">
+    <p> Y Position: </p>
+    <input class="inputSizeValue" (keyup)="onSetYPosition(yBox.value)" #yBox value="{{drawYPosition}}">
+  </div>
+  <div class="inputSizeText">
+    <p> Visible Square Size: </p>
+    <input class="inputSizeValue" (keyup)="onSetSquareSize(squareBox.value)" #squareBox value="{{drawSquareSize}}">
+  </div>
+<ul id="menu">
+  <li>
+    <div>
+      <a target="_blank" (click)="initGame()"> Init </a>
+    </div>
+  </li>
+  <li>
+    <div>
+      <a target="_blank" (click)="loadGosperGliderGun()"> Load Gosper Glider Gun </a>
+    </div>
+  </li>
+  <li>
+    <div>
+      <a target="_blank" (click)="start()"> Start </a>
+    </div>
+  </li>
+  <li>
+    <div>
+      <a target="_blank" (click)="stop()"> Stop </a>
+    </div>
+  </li>
+  <li>
+    <div>
+      <a target="_blank" (click)="saveState()"> Save </a>
+    </div>
+  </li>
+</ul>

@@ -12,11 +12,16 @@ import { GameService } from '../services/game.service';
 export class GameComponent {
   @Input() universe: UniverseComponent;  
   playInterval;
+  initialSize: number;
+  drawXPosition = 0;
+  drawYPosition = 0;
+  drawSquareSize = 40;
 
-  constructor(private gameService: GameService) {
+  constructor(private gameService: GameService) {  
   }
 
-  ngOnInit () {    
+  ngOnInit () {   
+    
     this.gameService.getGosperGliderGunContent()
     .subscribe((data: ICellResponse[][]) => {
       this.universe.setGosperGliderGunState(data);
@@ -24,8 +29,24 @@ export class GameComponent {
   }
 
   initGame()
-  {
-    this.universe.initializeUniverse();
+  {    
+    this.universe.initializeUniverse(this.initialSize);
+  }
+
+  onSetSize(size: number){
+    this.initialSize = size;
+  }
+
+  onSetXPosition(xValue) {
+    this.universe.setXPosition(xValue);
+  }
+
+  onSetYPosition(yValue) {
+    this.universe.setYPosition(yValue);
+  }
+
+  onSetSquareSize(squareValue) {
+    this.universe.setSquareSize(squareValue);
   }
 
   loadGosperGliderGun(){
@@ -35,7 +56,7 @@ export class GameComponent {
 
   start(){
     const self = this;
-    this.playInterval = setInterval(function() { self.universe.evolve()},  500);
+    this.playInterval = setInterval(function() { self.universe.evolve()},  300);
   }
 
   stop(){
@@ -47,7 +68,7 @@ export class GameComponent {
     const fileType = 'text/plain';
     const fileName = 'GameSnapshot.json';
 
-    var gameStateSnapshot = JSON.stringify(this.universe.clone());
+    var gameStateSnapshot = JSON.stringify(this.universe.slimDown());
 
     var a = document.createElement("a");
     var file = new Blob([gameStateSnapshot], {type: fileType});
