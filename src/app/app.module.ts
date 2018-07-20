@@ -10,7 +10,7 @@ import { GameService } from  './services/game.service';
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent,        
     GameComponent,
     UniverseComponent
   ],

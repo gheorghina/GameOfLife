@@ -1,10 +1,10 @@
-import { Position } from '../contracts/position.model';
+import { Position } from './position.model';
 
 export class Cell {
     private isAlive: boolean;
-    private x: number;
-    private y: number;
-    private neighbours;
+    x: number;
+    y: number;
+    neighbours;
 
     constructor(x, y, isAlive = false) {
         this.x = x;
@@ -12,9 +12,9 @@ export class Cell {
         this.isAlive = isAlive;
 
         this.neighbours = [new Position(this.x - 1, this.y - 1),
-            new Position(this.x - 1, this.y), new Position(this.x - 1, this.y + 1), new Position(this.x, this.y - 1),
-            new Position(this.x, this.y + 1), new Position(this.x + 1, this.y - 1), new Position(this.x + 1, this.y),
-            new Position(this.x + 1, this.y + 1)];
+        new Position(this.x - 1, this.y), new Position(this.x - 1, this.y + 1), new Position(this.x, this.y - 1),
+        new Position(this.x, this.y + 1), new Position(this.x + 1, this.y - 1), new Position(this.x + 1, this.y),
+        new Position(this.x + 1, this.y + 1)];
     }
 
     getIsAlive() {
@@ -32,7 +32,7 @@ export class Cell {
 
     private evolveState(oldAliveNeighboursCount) {
         if (!this.isAlive && oldAliveNeighboursCount == 3) {
-            this.isAlive = true;            
+            this.isAlive = true;
             return;
         }
 
@@ -44,17 +44,15 @@ export class Cell {
 
     private getAliveNeighboursCount(oldGeneration) {
 
-        let count = 0;        
-        
-        for (var i = 0; i < this.neighbours.length; i++) {
-            var item = this.neighbours[i];
-            if (item.x >= 0 && item.y >= 0 && item.x < oldGeneration.length && item.y < oldGeneration.length) {
-              
-                if (oldGeneration[item.x][item.y].getIsAlive()) {
+        let count = 0;
+
+        for (var i = 0; i < oldGeneration.length; i++) {
+            for(var n=0; n < this.neighbours.length; n++){
+                if (this.neighbours[n].x == oldGeneration[i].x && this.neighbours[n].y == oldGeneration[i].y) {
                     count++;
-                }
-            }
-        }
+                }   
+            }          
+        }       
 
         return count;
     }

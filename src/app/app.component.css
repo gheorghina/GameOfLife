@@ -12,7 +12,7 @@
 
 .mainContainer
 {
-    float: left;
+    display: flex; 
     padding: 50px;
     width: 75%;
 }
