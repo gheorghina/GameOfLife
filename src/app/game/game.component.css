@@ -16,3 +16,8 @@
 #menu li:hover{   
     color: lightblue;
 }
+
+.inputSizeValue{
+    margin-left: 40px; 
+    width: 100px
+}

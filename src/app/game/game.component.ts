@@ -13,6 +13,9 @@ export class GameComponent {
   @Input() universe: UniverseComponent;  
   playInterval;
   initialSize: number;
+  drawXPosition = 0;
+  drawYPosition = 0;
+  drawSquareSize = 40;
 
   constructor(private gameService: GameService) {  
   }
@@ -32,6 +35,18 @@ export class GameComponent {
 
   onSetSize(size: number){
     this.initialSize = size;
+  }
+
+  onSetXPosition(xValue) {
+    this.universe.setXPosition(xValue);
+  }
+
+  onSetYPosition(yValue) {
+    this.universe.setYPosition(yValue);
+  }
+
+  onSetSquareSize(squareValue) {
+    this.universe.setSquareSize(squareValue);
   }
 
   loadGosperGliderGun(){

@@ -137,6 +137,34 @@ export class UniverseComponent {
     return addiacentCellsGroups;
   }
 
+  setXPosition(xValue) {
+    if (xValue == "") {
+      return;
+    }
+
+    this.drawXPosition = parseInt(xValue);
+    this.updateGenerationNumbers();
+  }
+
+  setYPosition(yValue) {
+    if (yValue == "") {
+      return;
+    }
+
+    this.drawYPosition = parseInt(yValue);
+    this.updateGenerationNumbers();
+  }
+
+  setSquareSize(squareValue) {
+    if (squareValue == "") {
+      return;
+    }
+
+    this.drawSquareSize = parseInt(squareValue);
+    this.updateGenerationNumbers();
+  }
+
+
   private getKey(x, y) {
     return '' + x + '-' + y;
   }
@@ -207,34 +235,7 @@ export class UniverseComponent {
 
   private generateContainerSize(size) {
     return (this.cellSize * size) + (2 * size) + 'px';
-  }
-
-  onSetXPosition(xValue) {
-    if (xValue == "") {
-      return;
-    }
-
-    this.drawXPosition = parseInt(xValue);
-    this.updateGenerationNumbers();
-  }
-
-  onSetYPosition(yValue) {
-    if (yValue == "") {
-      return;
-    }
-
-    this.drawYPosition = parseInt(yValue);
-    this.updateGenerationNumbers();
-  }
-
-  onSetSquareSize(squareValue) {
-    if (squareValue == "") {
-      return;
-    }
-
-    this.drawSquareSize = parseInt(squareValue);
-    this.updateGenerationNumbers();
-  }
+  }  
 
   private updateGenerationNumbers() {
 
